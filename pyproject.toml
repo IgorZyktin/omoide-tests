@@ -11,6 +11,7 @@ dependencies = [
     "omoide-client>=0.3.10",
     "pytest>=8.3.3",
     "python-dateutil>=2.9.0.post0",
+    "ruff>=0.8.0",
 ]
 
 [tool.ruff]

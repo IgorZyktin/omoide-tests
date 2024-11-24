@@ -1,19 +1,19 @@
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
+import tomllib
 from uuid import UUID
 
 
 @dataclass
 class User:
-
-    def __init__(self, login: str, password: str) -> None:
+    def __init__(self, login: str, password: str, name: str | None = None) -> None:
         self.login = login
         self.password = password
+        self.name = name
         self._uuid = None
 
     def __str__(self) -> str:
-        return f'User<{self.login}>'
+        return f'User<{self.name or self.login}>'
 
     @property
     def uuid(self) -> UUID:
@@ -49,5 +49,5 @@ def get_config(api_url: str, cred_path: Path) -> Config:
         api_url=api_url,
         cred_path=cred_path,
         admins=[User(**admin) for admin in data['admins']],
-        users=[User(**user) for user in data['admins']],
+        users=[User(**user) for user in data['users']],
     )

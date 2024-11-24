@@ -1,2 +1,3 @@
-# omoide_tests
-Integrational tests for Omoide project
+# Omoide tests
+
+Integrational tests for Omoide project.
