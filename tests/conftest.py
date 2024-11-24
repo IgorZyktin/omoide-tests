@@ -35,3 +35,28 @@ def config() -> cfg.Config:
 @pytest.fixture
 def client(config):
     return Client(base_url=config.api_url)
+
+
+@pytest.fixture(scope='session')
+def admin_1(config):
+    return config.admins[0]
+
+
+@pytest.fixture(scope='session')
+def admin_2(config):
+    return config.admins[1]
+
+
+@pytest.fixture(scope='session')
+def user_1(config):
+    return config.users[0]
+
+
+@pytest.fixture(scope='session')
+def user_2(config):
+    return config.users[1]
+
+
+@pytest.fixture(scope='session')
+def user_3(config):
+    return config.users[2]
