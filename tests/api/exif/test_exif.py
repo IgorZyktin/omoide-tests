@@ -17,7 +17,7 @@ def test_exif_crud(client_and_user_1, cleaner):
     client, user = client_and_user_1
 
     with client as client:
-        # 1. Получение расширенных данных по пользователе
+        # 1. Получение расширенных данных о пользователе
         users_response = api_get_all_users_v1_users_get.sync(client=client).to_dict()
         assert len(users_response['users']) == 1
         user_response = users_response['users'][0]
@@ -86,10 +86,8 @@ def test_exif_crud(client_and_user_1, cleaner):
         exif_response_7 = api_read_exif_v1_exif_item_uuid_get.sync(item_uuid, client=client)
         assert exif_response_7 is None
 
-        # 10. Удаление записи
-        delete_response = api_delete_item_v1_items_item_uuid_delete.sync(item_uuid, client=client)
-        assert delete_response is not None
-
-        # 11. Очистка ресурсов
+        # 10. Очистка ресурсов
         cleaner.skip_item(item_uuid)
         cleaner.skip_exif(item_uuid)
+        delete_response = api_delete_item_v1_items_item_uuid_delete.sync(item_uuid, client=client)
+        assert delete_response is not None
