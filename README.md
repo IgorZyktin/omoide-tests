@@ -1,3 +1,3 @@
 # Omoide tests
 
-Integrational tests for Omoide project.
+Интеграционные тесты для проекта `Omoide`.

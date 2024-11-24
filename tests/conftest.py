@@ -1,13 +1,14 @@
 import os
 from pathlib import Path
-from uuid import UUID
 
-import cfg
+import pytest
 from httpx import BasicAuth
 from omoide_client import AuthenticatedClient
 from omoide_client import Client
 from omoide_client.api.info import api_get_myself_v1_info_whoami_get
-import pytest
+
+import cfg
+import cleaner as cleaner_module
 
 
 @pytest.fixture(scope='session')
@@ -46,8 +47,18 @@ def _init_user(config: cfg.Config, user: cfg.User) -> cfg.User:
     with client as client:
         response = api_get_myself_v1_info_whoami_get.sync(client=client).to_dict()
 
-    user.uuid = UUID(response['uuid'])
+    user.uuid = response['uuid']
     return user
+
+
+def _new_client(config: cfg.Config, user: cfg.User) -> tuple[AuthenticatedClient, cfg.User]:
+    return AuthenticatedClient(
+        base_url=config.api_url,
+        httpx_args={
+            'auth': BasicAuth(username=user.login, password=user.password),
+        },
+        token='',
+    ), user
 
 
 @pytest.fixture
@@ -108,3 +119,42 @@ def user_2(config):
 def user_3(config):
     user = config.users[2]
     return _init_user(config, user)
+
+
+@pytest.fixture(scope='session')
+def client_and_admin_1(config, admin_1):
+    return _new_client(config, admin_1)
+
+
+@pytest.fixture(scope='session')
+def client_and_admin_2(config, admin_2):
+    return _new_client(config, admin_2)
+
+
+@pytest.fixture(scope='session')
+def client_and_user_1(config, user_1):
+    return _new_client(config, user_1)
+
+
+@pytest.fixture(scope='session')
+def client_and_user_2(config, user_2):
+    return _new_client(config, user_2)
+
+
+@pytest.fixture(scope='session')
+def client_and_user_3(config, user_3):
+    return _new_client(config, user_3)
+
+
+@pytest.fixture(scope='session')
+def cleaner(config, admin_1):
+    _client = AuthenticatedClient(
+        base_url=config.api_url,
+        httpx_args={
+            'auth': BasicAuth(username=admin_1.login, password=admin_1.password),
+        },
+        token='',
+    )
+    instance = cleaner_module.Cleaner(_client)
+    yield instance
+    instance.clean_all()

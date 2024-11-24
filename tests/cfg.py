@@ -13,7 +13,7 @@ class User:
         self._uuid = None
 
     def __str__(self) -> str:
-        return f'User<{self.name or self.login}>'
+        return f'User<{self.login}>'
 
     @property
     def uuid(self) -> UUID:
