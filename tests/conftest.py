@@ -7,6 +7,7 @@ from httpx import BasicAuth
 from omoide_client import AuthenticatedClient
 from omoide_client import Client
 from omoide_client.api.info import api_get_myself_v1_info_whoami_get
+from omoide_client.api.users import api_get_all_users_v1_users_get
 import pytest
 
 
@@ -46,10 +47,18 @@ def _init_user(config: cfg.Config, user: cfg.User) -> cfg.User:
         token='',
     )
     with client as client:
-        response = api_get_myself_v1_info_whoami_get.sync(client=client).to_dict()
+        me_response = api_get_myself_v1_info_whoami_get.sync(client=client).to_dict()
+        user.uuid = me_response['uuid']
 
-    user.uuid = response['uuid']
-    return user
+        users_response = api_get_all_users_v1_users_get.sync(client=client).to_dict()
+
+        for each in users_response['users']:
+            if each['uuid'] == str(user.uuid):
+                user.root_item_uuid = each['extras']['root_item_uuid']
+                return user
+
+    msg = f'Failed to get all required infor for user {user}'
+    raise RuntimeError(msg)
 
 
 def _new_client(config: cfg.Config, user: cfg.User) -> tuple[AuthenticatedClient, cfg.User]:

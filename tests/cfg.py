@@ -14,10 +14,21 @@ class User:
         self.password = password
         self.name = name
         self._uuid = None
+        self._root_item_uuid = None
 
     def __str__(self) -> str:
         """Return textual representation."""
-        return f'User<{self.login}>'
+        kwargs = {'login': self.login}
+
+        if self._uuid is not None:
+            kwargs['uuid'] = str(self._uuid)
+
+        if self._root_item_uuid is not None:
+            kwargs['root_item_uuid'] = str(self._root_item_uuid)
+
+        joined = ', '.join(f'{key}={value!r}' for key, value in kwargs.items())
+
+        return f'User<{joined}>'
 
     @property
     def uuid(self) -> UUID:
@@ -33,7 +44,31 @@ class User:
         if self._uuid is not None:
             msg = f'User {self} is already initiated'
             raise RuntimeError(msg)
-        self._uuid = UUID(uuid)
+
+        if isinstance(uuid, str):
+            self._uuid = UUID(uuid)
+        else:
+            self._uuid = uuid
+
+    @property
+    def root_item_uuid(self) -> UUID:
+        """Return UUID of the root item for this user."""
+        if self._root_item_uuid is None:
+            msg = f'Root item for user {self} is not yet initiated'
+            raise RuntimeError(msg)
+        return self._root_item_uuid
+
+    @root_item_uuid.setter
+    def root_item_uuid(self, uuid: str | UUID) -> None:
+        """Set UUID of the root item for this user."""
+        if self._root_item_uuid is not None:
+            msg = f'Root item for user {self} is already initiated'
+            raise RuntimeError(msg)
+
+        if isinstance(uuid, str):
+            self._root_item_uuid = UUID(uuid)
+        else:
+            self._root_item_uuid = uuid
 
 
 @dataclass
