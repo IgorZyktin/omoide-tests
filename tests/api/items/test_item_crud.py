@@ -2,7 +2,34 @@ from uuid import UUID
 
 from omoide_client.api.items import api_create_item_v1_items_post
 from omoide_client.api.items import api_delete_item_v1_items_item_uuid_delete
+from omoide_client.api.items import api_read_item_v1_items_item_uuid_get
 from omoide_client.models import ItemInput
+
+
+def test_item_delete_root_item(client_and_user_1, client_and_user_2, client_and_user_3):
+    """Test that root item cannot be deleted."""
+    # arrange
+    for client, user in [client_and_user_1, client_and_user_2, client_and_user_3]:
+        # 1. Verify that item exists
+        item_response_1 = api_read_item_v1_items_item_uuid_get.sync(
+            item_uuid=user.root_item_uuid,
+            client=client,
+        )
+        assert item_response_1.item.uuid == user.root_item_uuid
+
+        # 2. Try to delete it
+        delete_response = api_delete_item_v1_items_item_uuid_delete.sync(
+            item_uuid=user.root_item_uuid,
+            client=client,
+        )
+        assert delete_response is None
+
+        # 3. Verify that item still exists
+        item_response_2 = api_read_item_v1_items_item_uuid_get.sync(
+            item_uuid=user.root_item_uuid,
+            client=client,
+        )
+        assert item_response_2.item.uuid == user.root_item_uuid
 
 
 def test_item_create(client_and_user_1, cleaner):
