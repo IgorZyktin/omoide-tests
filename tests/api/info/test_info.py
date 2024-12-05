@@ -4,9 +4,10 @@ from omoide_client.api.info import api_get_myself_v1_info_whoami_get
 from omoide_client.api.info import api_get_version_v1_info_version_get
 
 
-def test_info_version(client):
+def test_info_version(api_client):
+    """Test that API can return its version."""
     # act
-    with client as client:
+    with api_client as client:
         response = api_get_version_v1_info_version_get.sync(client=client).to_dict()
 
     # assert
@@ -14,9 +15,10 @@ def test_info_version(client):
     assert isinstance(response['version'], str)
 
 
-def test_info_whoami_anon(client):
+def test_info_whoami_anon(api_client):
+    """Test that API recognizes anon users."""
     # act
-    with client as client:
+    with api_client as client:
         response = api_get_myself_v1_info_whoami_get.sync(client=client).to_dict()
 
     # assert
@@ -25,6 +27,7 @@ def test_info_whoami_anon(client):
 
 
 def test_info_whoami_known(config, raw_admin_1, raw_admin_2, raw_user_1, raw_user_2, raw_user_3):
+    """Test that API recognizes registered users."""
     # act
     for user in [raw_admin_1, raw_admin_2, raw_user_1, raw_user_2, raw_user_3]:
         client = AuthenticatedClient(

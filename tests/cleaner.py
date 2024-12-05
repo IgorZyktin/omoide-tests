@@ -34,9 +34,9 @@ class Cleaner:
         """Remove UUID from the list, return True if deleted."""
         try:
             given_list.remove(uuid)
-            return True
         except ValueError:
             return False
+        return True
 
     def add_item(self, item_uuid: UUID | str) -> None:
         """Store reference."""

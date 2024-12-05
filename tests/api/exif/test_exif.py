@@ -18,12 +18,12 @@ def test_exif_crud(client_and_user_1, cleaner):
     client, user = client_and_user_1
 
     with client as client:
-        # 1. Getting user extras
+        # 1. Get user extras
         users_response = api_get_all_users_v1_users_get.sync(client=client).to_dict()
         assert len(users_response['users']) == 1
         user_response = users_response['users'][0]
 
-        # 2. Creating item
+        # 2. Create item
         item_body = ItemInput(
             parent_uuid=UUID(user_response['extras']['root_item_uuid']),
             name='item-for-exif-test',
@@ -32,11 +32,11 @@ def test_exif_crud(client_and_user_1, cleaner):
         item_uuid = item_response.item.uuid
         cleaner.add_item(item_uuid)
 
-        # 3. Verifying that item has no EXIF
+        # 3. Verify that item has no EXIF
         exif_response_1 = api_read_exif_v1_exif_item_uuid_get.sync(item_uuid, client=client)
         assert exif_response_1 is None
 
-        # 4. Creating EXIF
+        # 4. Create EXIF
         cleaner.add_exif(item_uuid)
         exif_1 = {
             'hello': 'world',
@@ -53,12 +53,12 @@ def test_exif_crud(client_and_user_1, cleaner):
         assert exif_response_2['result'] == 'created exif'
         assert exif_response_2['item_uuid'] == str(item_uuid)
 
-        # 5. Verifying that item has EXIF
+        # 5. Verify that item has EXIF
         exif_response_3 = api_read_exif_v1_exif_item_uuid_get.sync(item_uuid, client=client)
         assert exif_response_3 is not None
         assert exif_response_3.exif.to_dict() == exif_1
 
-        # 6. Updating EXIF
+        # 6. Update EXIF
         exif_2 = {
             'why': {
                 'not': {
@@ -74,18 +74,18 @@ def test_exif_crud(client_and_user_1, cleaner):
         assert exif_response_4['result'] == 'updated exif'
         assert exif_response_4['item_uuid'] == str(item_uuid)
 
-        # 7. Verifying that EXIF has changed
+        # 7. Verify that EXIF has changed
         exif_response_5 = api_read_exif_v1_exif_item_uuid_get.sync(item_uuid, client=client)
         assert exif_response_5 is not None
         assert exif_response_5.exif.to_dict() != exif_1
         assert exif_response_5.exif.to_dict() == exif_2
 
-        # 8. Deleting EXIF
+        # 8. Delete EXIF
         exif_response_6 = api_delete_exif_v1_exif_item_uuid_delete.sync(item_uuid, client=client)
         assert exif_response_6 is not None
         assert exif_response_6['result'] == 'deleted exif'
 
-        # 9. Verifying that item has no EXIF
+        # 9. Verify that item has no EXIF
         exif_response_7 = api_read_exif_v1_exif_item_uuid_get.sync(item_uuid, client=client)
         assert exif_response_7 is None
 

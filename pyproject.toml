@@ -89,6 +89,7 @@ lint.ignore = [
     "SIM108",  # Use ternary operator instead of `if`-`else`-block
     "TRY401",  # Redundant exception object included in logging.exception call
     "UP040",   # Type alias ... uses `TypeAlias` annotation instead of the `type` keyword
+    "D100",    # Missing docstring in public module
 ]
 
 [tool.ruff.format]
