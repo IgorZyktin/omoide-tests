@@ -54,13 +54,15 @@ def _init_user(config: cfg.Config, user: cfg.User) -> cfg.User:
 
 def _new_client(config: cfg.Config, user: cfg.User) -> tuple[AuthenticatedClient, cfg.User]:
     """Create and return authenticated client instance."""
-    return AuthenticatedClient(
+    client = AuthenticatedClient(
         base_url=config.api_url,
         httpx_args={
             'auth': BasicAuth(username=user.login, password=user.password),
         },
         token='',
-    ), user
+    )
+
+    return client, user
 
 
 @pytest.fixture
