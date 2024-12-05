@@ -81,7 +81,7 @@ def test_exif_crud(client_and_user_1, cleaner):
     assert exif_response_7 is None
 
     # 9. Cleanup
-    cleaner.skip_item(item_uuid)
-    cleaner.skip_exif(item_uuid)
     delete_response = api_delete_item_v1_items_item_uuid_delete.sync(item_uuid, client=client)
     assert delete_response is not None
+    cleaner.skip_item(item_uuid)
+    cleaner.skip_exif(item_uuid)
