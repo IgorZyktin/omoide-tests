@@ -1,7 +1,7 @@
 from httpx import BasicAuth
-from omoide_client import AuthenticatedClient
 from omoide_client.api.info import api_get_myself_v1_info_whoami_get
 from omoide_client.api.info import api_get_version_v1_info_version_get
+from omoide_client.client import AuthenticatedClient
 
 
 def test_info_version(api_client):

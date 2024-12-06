@@ -4,10 +4,10 @@ from pathlib import Path
 import cfg
 import cleaner as cleaner_module
 from httpx import BasicAuth
-from omoide_client import AuthenticatedClient
-from omoide_client import Client
 from omoide_client.api.info import api_get_myself_v1_info_whoami_get
 from omoide_client.api.users import api_get_all_users_v1_users_get
+from omoide_client.client import AuthenticatedClient
+from omoide_client.client import Client
 import pytest
 
 

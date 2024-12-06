@@ -1,9 +1,9 @@
 from uuid import UUID
 
 from loguru import logger
-from omoide_client import AuthenticatedClient
 from omoide_client.api.exif import api_delete_exif_v1_exif_item_uuid_delete
 from omoide_client.api.items import api_delete_item_v1_items_item_uuid_delete
+from omoide_client.client import AuthenticatedClient
 
 LOG = logger
 

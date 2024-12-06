@@ -2,7 +2,7 @@ from uuid import UUID
 
 from omoide_client.api.items import api_create_item_v1_items_post
 from omoide_client.api.items import api_delete_item_v1_items_item_uuid_delete
-from omoide_client.api.items import api_read_item_v1_items_item_uuid_get
+from omoide_client.api.items import api_get_item_v1_items_item_uuid_get
 from omoide_client.models import ItemInput
 
 
@@ -11,7 +11,7 @@ def test_item_delete_root_item(client_and_user_1, client_and_user_2, client_and_
     # arrange
     for client, user in [client_and_user_1, client_and_user_2, client_and_user_3]:
         # 1. Verify that item exists
-        item_response_1 = api_read_item_v1_items_item_uuid_get.sync(
+        item_response_1 = api_get_item_v1_items_item_uuid_get.sync(
             item_uuid=user.root_item_uuid,
             client=client,
         )
@@ -25,7 +25,7 @@ def test_item_delete_root_item(client_and_user_1, client_and_user_2, client_and_
         assert delete_response is None
 
         # 3. Verify that item still exists
-        item_response_2 = api_read_item_v1_items_item_uuid_get.sync(
+        item_response_2 = api_get_item_v1_items_item_uuid_get.sync(
             item_uuid=user.root_item_uuid,
             client=client,
         )
@@ -107,7 +107,7 @@ def test_item_create_and_delete_parent(client_and_user_1, cleaner):
     assert delete_response_1 is not None
 
     # 4. Verify that child is also absent
-    item_response_3 = api_read_item_v1_items_item_uuid_get.sync(
+    item_response_3 = api_get_item_v1_items_item_uuid_get.sync(
         item_uuid=child_uuid,
         client=client,
     )
